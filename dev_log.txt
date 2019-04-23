@@ -1,0 +1,14 @@
+【Apr 23rd】
+	= 已完成
+	- 完成OpenCV-Cpp环境部署
+	- 完成features.cpp/void get_context_feature()编写与初步调试运行
+		- 现void get_context_feature()已可以运行
+			- 习得技能：OpenCV图像切割
+			- 习得技能：OpenCV::calcHist()函数的参数设置
+				- Hue: 图像色调，当色调为0时颜色即为黑色，255时为白色；
+				- Saturation: 图像饱和度，当饱和度为0时，图像为灰度图；
+			- 习得技能：以MatND格式存储直方图，并通过.at<float>(h_idx, s_idx)进行
+				直方图各bin取值与赋值操作
+	- 完成anconda下OpenCV环境部署
+	= 待办项
+	- 直方图输出结果尚未与features.py中def get_context_feature()进行比对

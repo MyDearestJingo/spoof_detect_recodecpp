@@ -1,48 +1,74 @@
-#include <opencv.h>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/opencv.hpp>
 #include <iostream>
 
-using namespace std;
-
-/*  Log
-    Apr 22nd:
-        - 完成第一次编写，可优化点在两个循环的位置，具体需要查询ARM处理器的指令集
-        - calcHist()与【裁剪图像】尚未进行验证运行
-*/
 void get_context_feature(
     // input arg
-    const Mat* img, 
+    const Mat& img, 
     const int* crop_bbox,
     // output
-    float* face_hist,
-    float* nonface_hsit)
+    MatND& face_hist,
+    MatND& nonface_hist)
     {
+    cout<<"get in func"<<endl;
     // 使用opencv绘制图像直方图
     // 直方图属性：
-    float img_hist[256] = {0.0}; // full img hist array
-    float face_hist[256] = {0.0}; // face region hist array
-    float nonface_hist[256] = {0.0}; // non-face region hist array
-    int histSize = 256;
-    int channles = 0;
-    int ranges[2] = {0, 256};
+    // hbins: 色调等级,色调为0则为黑色，此处设置为256个级别; 
+    // sbins: 饱和度等级,0时表示灰度图像;
+    int hbins = 255, sbins = 1; 
+    int histSize[] = {hbins,sbins};
+    int channles[] = {0};
+    // 设置色调的取之范围为{0,256}
+    float hranges[] = { 0, 256 };
+    // 由于使用灰度图作为输入，故饱和度取0即可
+    float sranges[] = { 0, 1 };
+    const float* ranges[] = { hranges, sranges };
     // void calcHist(images, nimages, channels, mask, hist, dims, histSize, ranges, uniform, accumulate)
     // dims: 直方图描述的维度，若只针对灰度图，则只是1-dim，对RGB三通道都进行计算则为3-dim
     // uniform：默认为true，是否需要改为false
     // 计算全局直方图
-    calcHist(img, 1, &channels, NULL, img_hist, dims=1, &histSize, ranges);
+    MatND img_hist;
+    cout<<"clac img_hist ..."<<endl;
+    calcHist(&img, 1, channles, Mat(), img_hist, 1, histSize, ranges);
     // 根据crop_bbox坐标裁剪图像
     Rect roi(crop_bbox[0],crop_bbox[1],crop_bbox[2],crop_bbox[3]);
     Mat face = img(roi);
     // 计算人脸区域直方图
-    calcHist(face, 1, &channels, NULL, img_hist, dims=1, &histSize, ranges);
+    cout<<"clac face_hist ..."<<endl;
+    calcHist(&face, 1, channles, Mat(), face_hist, 1, histSize, ranges);
+    // calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges);
+    nonface_hist = face_hist;
     float sum = 0.0;
     // 非人脸区域直方图 = 全图直方图 - 人脸区域直方图 || 人脸区域归一化前sum的计算
-    for(int i=0;i<256;i++){
-        nonface_hist[i] = img_hist[i] - face_hist[i];
-        sum += face_hist[i];
+        // for(int i=0;i<256;i++){
+        //     nonface_hist[i] = img_hist[i] - face_hist[i];
+        //     sum += face_hist[i];
+        // }
+    cout<<"clac nonface_hist ..."<<endl;
+    for( int h = 0; h < hbins; h++ ){
+        for( int s = 0; s < sbins; s++ )
+        {   cout<<"h = "<<h<<" | s = "<<s<<endl;
+            // float binVal = hist.at<float>(h, s);
+            // int intensity = cvRound(binVal*255/maxVal);
+            // rectangle( histImg, Point(h*scale, s*scale),
+            //             Point( (h+1)*scale - 1, (s+1)*scale - 1),
+            //             Scalar::all(intensity),
+            //             CV_FILLED );
+            // cout<<"img_hist: "<<img_hist.at<float>(h,s)<<" | "
+                // <<"face_hist: "<<face_hist.at<float>(h,s)<<endl;;
+            nonface_hist.at<float>(h,s) = img_hist.at<float>(h,s) - face_hist.at<float>(h,s);
+            sum += face_hist.at<float>(h,s);
+        }
     }
     // 归一化
-    for(int i=0;i<256;i++){
-        face_hist[i] = face_hist[i]/sum;
+    cout<<"Normalize ..."<<endl;
+    cout<<"sum = "<<sum<<endl;
+    for( int h = 0; h < hbins; h++ ){
+        for( int s = 0; s < sbins; s++ ){
+            face_hist.at<float>(h,s) /= sum;
+        }
     }
-
+    cout<<"func out"<<endl;
+    return;
 }

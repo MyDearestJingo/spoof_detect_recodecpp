@@ -1,0 +1,6 @@
+PROJECT(calcHist_test)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+FIND_PACKAGE(OpenCV REQUIRED)
+ADD_EXECUTABLE(calcHist_test_exe test_features.cpp)
+TARGET_LINK_LIBRARIES(calcHist_test_exe ${OpenCV_LIBS})

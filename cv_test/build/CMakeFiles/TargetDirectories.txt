@@ -1,0 +1,3 @@
+/home/mdlu/spoof_detect_recodecpp/cv_test/build/CMakeFiles/rebuild_cache.dir
+/home/mdlu/spoof_detect_recodecpp/cv_test/build/CMakeFiles/cvtest_exe.dir
+/home/mdlu/spoof_detect_recodecpp/cv_test/build/CMakeFiles/edit_cache.dir
