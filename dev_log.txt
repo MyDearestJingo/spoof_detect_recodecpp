@@ -22,3 +22,6 @@
 		- C++中，Rect roi(左上x, 左上y, 宽, 高)
 	- 本以为用nonface_hist = face_hist初始化nonface_hist，但是face_hist会因此被改变，原因未知
 	  目前初始化采用：calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges)
+		- 【Apr 25nd 17:41】现已经改用nonface_hist = MatND::zeros(hbins,sbins,CV_32F)完成初始化
+	= 已完成
+		- void get_context_feature()测试完成；  

@@ -58,7 +58,7 @@ void get_context_feature(
     
     // 预输出face_hist未归一化版本
     for(int i=40;i<50;i++){
-        cout<<i<<" : "<<face_hist.at<float>(i,0)<<endl;
+        // cout<<i<<" : "<<face_hist.at<float>(i,0)<<endl;
     }
     // 预输出img_hist
     for(int i=0;i<hranges[1];i++){
@@ -66,7 +66,8 @@ void get_context_feature(
     }
 
     // 初始化nonface_hist
-    calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges);
+    nonface_hist = MatND::zeros(hbins,sbins,CV_32F);
+    // calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges);
     // nonface_hist = face_hist;  // <-很奇怪这一句会影响face_hist的值
     float sum = 0.0;
     // 非人脸区域直方图 = 全图直方图 - 人脸区域直方图 || 人脸区域归一化前sum的计算
@@ -104,6 +105,40 @@ void get_context_feature(
     cout<<"func out"<<endl;
     return;
 }
+void get_lbp_feature(const Mat& img, int numPoints, int radius, MatND &lbp, MatND &lbp_hist){
+    int binsNumber = numPoints*(numPoints-1)+3;
+    int binsRange[] = {0,binsNumber+1};
+    // 初始化MatND lbp
+    lbp = Mat::zeros(src.rows-2*radius, src.cols-2*radius, CV_32F);
+    // 计算LBP
+    for(int n=0; n<numPoints; n++) {
+        // sample points
+        float x = static_cast<float>(radius) * cos(2.0*M_PI*n/static_cast<float>(numPoints));
+        float y = static_cast<float>(radius) * -sin(2.0*M_PI*n/static_cast<float>(numPoints));
+        // relative indices
+        int fx = static_cast<int>(floor(x));
+        int fy = static_cast<int>(floor(y));
+        int cx = static_cast<int>(ceil(x));
+        int cy = static_cast<int>(ceil(y));
+        // fractional part
+        float ty = y - fy;
+        float tx = x - fx;
+        // set interpolation weights
+        float w1 = (1 - tx) * (1 - ty);
+        float w2 =      tx  * (1 - ty);
+        float w3 = (1 - tx) *      ty;
+        float w4 =      tx  *      ty;
+        // iterate through your data
+        for(int i=radius; i < src.rows-radius;i++) {
+            for(int j=radius;j < src.cols-radius;j++) {
+                float t = w1*src.at<_Tp>(i+fy,j+fx) + w2*src.at<_Tp>(i+fy,j+cx) + w3*src.at<_Tp>(i+cy,j+fx) + w4*src.at<_Tp>(i+cy,j+cx);
+                // we are dealing with floating point precision, so add some little tolerance
+                dst.at<unsigned int>(i-radius,j-radius) += ((t > src.at<_Tp>(i,j)) && (abs(t-src.at<_Tp>(i,j)) > std::numeric_limits<float>::epsilon())) << n;
+            }
+        }
+    }
+
+}
 
 int main(int argc, char** argv){
     cout<<"test start"<<endl;
@@ -123,8 +158,10 @@ int main(int argc, char** argv){
     MatND face_hist, nonface_hist;
     int crop_bboxs[4] = {10,10,90,90}; // 根据ROI设置，按顺序分别为{起始点x坐标，起始点y坐标，x方向延伸距离，y方向延伸距离}
     get_context_feature(dst, crop_bboxs, face_hist, nonface_hist);
-
+    
+    // 点测正则化后的face_hist
     cout<<"Normalized_face_hist "<<140<<" : "<<face_hist.at<float>(140,0)<<endl;
+    
     // 文件输出以对照结果
     ofstream ofile;
     ofile.open("face_hist.txt",ios::out);

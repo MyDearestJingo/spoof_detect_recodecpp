@@ -44,5 +44,5 @@ def get_lbp_feature(img,numPoints=8,radius=2):
     binsRange = np.arange(0,binsNumber+1) # 生成[0, binsNumber+1]的np.array，直方图x轴分隔点分布
     lbp = feature.local_binary_pattern(img, numPoints, radius, method = 'nri_uniform') #
     (hist, bins) = np.histogram(lbp.ravel(), bins=binsRange, range=(0,binsNumber),) # ？bins无用
-    hist = hist/sum(hist) # ？归一化
+    hist = hist/sum(hist) # 归一化
     return lbp, hist.reshape(binsNumber)
