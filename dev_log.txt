@@ -12,3 +12,6 @@
 	- 完成anconda下OpenCV环境部署
 	= 待办项
 	- 直方图输出结果尚未与features.py中def get_context_feature()进行比对
+【Apr 24nd】
+	= 已完成
+	- 习得技能：OpenCV中需要InputArray与OutputArray对象的位置可直接使用Mat对象；
