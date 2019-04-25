@@ -15,3 +15,10 @@
 【Apr 24nd】
 	= 已完成
 	- 习得技能：OpenCV中需要InputArray与OutputArray对象的位置可直接使用Mat对象；
+【Apr 25nd】
+	= 习得技能：
+	- Python和C++中的OpenCV对裁剪图像用的ROI设定参数不同
+		- Python中，cropped_img = img(左上x, 左上y, 右下x, 右下y)
+		- C++中，Rect roi(左上x, 左上y, 宽, 高)
+	- 本以为用nonface_hist = face_hist初始化nonface_hist，但是face_hist会因此被改变，原因未知
+	  目前初始化采用：calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges)
