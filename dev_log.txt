@@ -24,4 +24,6 @@
 	  目前初始化采用：calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges)
 		- 【Apr 25nd 17:41】现已经改用nonface_hist = MatND::zeros(hbins,sbins,CV_32F)完成初始化
 	= 已完成
-		- void get_context_feature()测试完成；  
+		- void get_context_feature()测试完成；
+		- void get_lpb_feature()
+			- 编写完成获取LBP特征部分，但由于计算方法与skimge中不同，是否有效仍待验证  

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <string>
+#include <bitset>
 
 using namespace std;
 using namespace cv;
@@ -105,16 +106,52 @@ void get_context_feature(
     cout<<"func out"<<endl;
     return;
 }
-void get_lbp_feature(const Mat& img, int numPoints, int radius, MatND &lbp, MatND &lbp_hist){
-    int binsNumber = numPoints*(numPoints-1)+3;
+void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatND &lbp, MatND &lbp_hist){
+    int binsNumber = neighbors*(neighbors-1)+3;
     int binsRange[] = {0,binsNumber+1};
     // 初始化MatND lbp
-    lbp = Mat::zeros(src.rows-2*radius, src.cols-2*radius, CV_32F);
+
     // 计算LBP
-    for(int n=0; n<numPoints; n++) {
+    // 由于是对现有算法的验证，则不再写个什么优秀的函数提供调参的功能了
+    // 目前参数
+    // int neighbors=8;
+    // int radius=2;
+    /*
+    cout<<"Computing LBP ..."<<endl;
+    for(int r=radius;r<img.rows-radius;r++){
+        for(int c=radius;c<img.cols-radius;c++){
+            float sample = img.at<float>(r,c);
+            //lbp.at<float>(r-radius,c-radius)
+            bitset<8> lbp_val;
+            float target = 
+                (img.at<float>(r-radius,c) > sample)       // U
+                + (img.at<float>(r-1,c+1) > sample)*128       // UR
+                + (img.at<float>(r,c+radius) > sample)*64    // R
+                + (img.at<float>(r+1,c+1) > sample)*32       // DR
+                + (img.at<float>(r+radius,c) > sample)*16   // D
+                + (img.at<float>(r+1,c-1) > sample)*8      // DL
+                + (img.at<float>(r,c-radius) > sample)*4   // L
+                + (img.at<float>(r-1,c-1) > sample)*2;    // UL
+
+            lbp_val[0] = (img.at<float>(r-radius,c) > sample);       // U
+            lbp_val[1] = (img.at<float>(r-1,c+1) > sample);      // UR
+            lbp_val[2] = (img.at<float>(r,c+radius) > sample);    // R
+            lbp_val[3] = (img.at<float>(r+1,c+1) > sample);       // DR
+            lbp_val[4] = (img.at<float>(r+radius,c) > sample);  // D
+            lbp_val[5] = (img.at<float>(r+1,c-1) > sample);     // DL
+            lbp_val[6] = (img.at<float>(r,c-radius) > sample);   // L
+            lbp_val[7] = (img.at<float>(r-1,c-1) > sample);    // UL
+            cout<<"Current Position: "<<r<<","<<c<<" val: "<<target<<','<<lbp_val<<endl;
+            lbp.at<float>(r-radius,c-radius) = target;
+        }
+    }
+    cout<<"LBP Complete"<<endl;
+    */
+    lbp = Mat::zeros(src.rows-2*radius, src.cols-2*radius, CV_32FC1);
+    for(int n=0; n<neighbors; n++) {
         // sample points
-        float x = static_cast<float>(radius) * cos(2.0*M_PI*n/static_cast<float>(numPoints));
-        float y = static_cast<float>(radius) * -sin(2.0*M_PI*n/static_cast<float>(numPoints));
+        float x = static_cast<float>(radius) * cos(2.0*M_PI*n/static_cast<float>(neighbors));
+        float y = static_cast<float>(radius) * -sin(2.0*M_PI*n/static_cast<float>(neighbors));
         // relative indices
         int fx = static_cast<int>(floor(x));
         int fy = static_cast<int>(floor(y));
@@ -131,9 +168,9 @@ void get_lbp_feature(const Mat& img, int numPoints, int radius, MatND &lbp, MatN
         // iterate through your data
         for(int i=radius; i < src.rows-radius;i++) {
             for(int j=radius;j < src.cols-radius;j++) {
-                float t = w1*src.at<_Tp>(i+fy,j+fx) + w2*src.at<_Tp>(i+fy,j+cx) + w3*src.at<_Tp>(i+cy,j+fx) + w4*src.at<_Tp>(i+cy,j+cx);
+                float t = w1*src.at<float>(i+fy,j+fx) + w2*src.at<float>(i+fy,j+cx) + w3*src.at<float>(i+cy,j+fx) + w4*src.at<float>(i+cy,j+cx);
                 // we are dealing with floating point precision, so add some little tolerance
-                dst.at<unsigned int>(i-radius,j-radius) += ((t > src.at<_Tp>(i,j)) && (abs(t-src.at<_Tp>(i,j)) > std::numeric_limits<float>::epsilon())) << n;
+                lbp.at<unsigned int>(i-radius,j-radius) += ((t > src.at<float>(i,j)) && (abs(t-src.at<float>(i,j)) > std::numeric_limits<float>::epsilon())) << n;
             }
         }
     }
@@ -169,5 +206,18 @@ int main(int argc, char** argv){
         ofile<<face_hist.at<float>(i,0)<<endl;
     }
     ofile.close();
+
+    // 提取LBP特征
+    MatND lbp;
+    MatND lbp_hist;
+    int radius = 2;
+    int neighbors = 8;
+    get_lbp_feature(dst, radius, neighbors, lbp, lbp_hist);
+
+    cout<<"LBP features of img: "<<endl;
+    for(int i=0;i<3;i++){
+        cout<<lbp.at<float>(i,0)<<" ";
+    }
+    cout<<endl;
     return 0;
 }
