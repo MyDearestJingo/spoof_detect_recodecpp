@@ -1,0 +1,3 @@
+/home/mdlu/getfeatures/build/CMakeFiles/rebuild_cache.dir
+/home/mdlu/getfeatures/build/CMakeFiles/getfeatures_exe.dir
+/home/mdlu/getfeatures/build/CMakeFiles/edit_cache.dir

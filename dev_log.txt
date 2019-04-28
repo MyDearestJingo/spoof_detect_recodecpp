@@ -37,6 +37,25 @@
 	- 考虑到之后会重新使用LIBSVM重新训练模型，故现在无视数值上的直接差异，仅进行直方图转化（保持与Python
 	  源码相同的shape）
 	- 使用cv::normalize()函数对直方图进行归一化
+- 关于LIBSVM
+	- 已将源代码下载至本地，实例代码可见LIBSVM目录下的svm-train.c和svm-predict.c
+	- 具体使用还是得看README
+	- 使用的话，将svm.h和svm.cpp加入已有代码中一起编译就可以使用LIBSVM的接口
+- 功能拆分与对多文件的CMakeLists.txt编写，并编译通过
+- 整理发布ReleaseVersion0.1.0
 = 习得技能
 - cv::normalize()
 	- 注意其导出的MatND对象中，首位是归一化的总值；
+- 关于头文件引入一事
+	- 所有需要的#include<>语句都写在头文件里，这样.cpp直接include该头文件即可
+- 关于对多文件的CMakeLists.txt文件的编写
+	- 对于.h文件的引入：使用INCLUDE_DIRECTORIES(<path_to_headfile_directory>);
+	- 如需制定当前CMakeLists.txt文件的位置，直接使用CMAKE_CURRENT_SOURCE_DIR变量，别用./指代当前目录
+	- 若有多个.cpp需要编译，记得加入ADD_EXECUTABLE中，注意路径如上述；
+= 下一阶段待办
+- SVM Classifier
+	- 获取训练用数据
+	- 数据预处理
+	- 使用LIBSVM构建模型
+	- 进行训练
+	- 进行预测

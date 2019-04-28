@@ -1,0 +1,3 @@
+/home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles/rebuild_cache.dir
+/home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles/calcHist_test_exe.dir
+/home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles/edit_cache.dir
