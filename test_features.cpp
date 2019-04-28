@@ -2,6 +2,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include <opencv2/opencv.hpp>
 //#include "features.h"
+#include <math.h>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -13,15 +14,21 @@ using namespace cv;
 
 string img_path = "lena.jpeg";
 
+// 计算LBP用函数声明
+int getHopTimes(int n);
+template <typename _tp>
+void getUniformPatternLBPFeature(InputArray _src, OutputArray _dst, int radius, int neighbors);
+
+
 void get_context_feature(
     // input arg
     const Mat& img, 
     const int* crop_bbox,
     // output
     MatND& face_hist,
-    MatND& nonface_hist)
-    {
-    cout<<"get in func"<<endl;
+    MatND& nonface_hist){
+    cout<<"=============enter context_features============="<<endl;
+
     // 使用opencv绘制图像直方图
     // 直方图属性：
     // hbins: 色调等级,色调为0则为黑色，此处设置为256个级别; 
@@ -103,10 +110,11 @@ void get_context_feature(
             face_hist.at<float>(h,s) /= sum;
         }
     }
-    cout<<"func out"<<endl;
+    cout<<"=============exit context_features============="<<endl;
     return;
 }
 void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatND &lbp, MatND &lbp_hist){
+    cout<<"=============enter lbp_features============="<<endl;
     int binsNumber = neighbors*(neighbors-1)+3;
     int binsRange[] = {0,binsNumber+1};
     // 初始化MatND lbp
@@ -117,6 +125,7 @@ void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatN
     // int neighbors=8;
     // int radius=2;
     /*
+    // 下面是自己手撸的LBP代码
     cout<<"Computing LBP ..."<<endl;
     for(int r=radius;r<img.rows-radius;r++){
         for(int c=radius;c<img.cols-radius;c++){
@@ -147,6 +156,8 @@ void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatN
     }
     cout<<"LBP Complete"<<endl;
     */
+
+    /* 圆形LBP特征计算，由于输出数据过于诡异（1.0E-45级别）已弃用
     lbp = Mat::zeros(src.rows-2*radius, src.cols-2*radius, CV_32FC1);
     for(int n=0; n<neighbors; n++) {
         // sample points
@@ -174,8 +185,38 @@ void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatN
             }
         }
     }
+    */
+    getUniformPatternLBPFeature<float>(src, lbp, radius, neighbors);
+    // 找最大值
+    float max = 0;
+    for(int r=0;r<lbp.rows;r++){
+        for(int c=0;c<lbp.cols;c++){
+            float tmp = lbp.at<float>(r,c);
+            if(max<tmp) max = tmp;
+        }
+    }
+    cout<<"Max: "<<max<<endl;
+    // int nbin_x = pow(2,neighbors)-1;
+    int nbin_x = neighbors*(neighbors-1)+4;
+    int nbin_y = 1; 
+    int histSize[] = {nbin_x,nbin_y};
+    int channles[] = {0};
+    // 直方图宽度标定范围
+    float axis_z[] = { 0, binsNumber+1 };
+    // // 只有一个维度
+    // float axis_y[] = { 0, 1 };
+    const float* ranges = { axis_z };
+    // MatND lbp_hist;
+    cout<<"nbin_x: "<<nbin_x<<" ,nbin_y: "<<nbin_y<<endl;
+    lbp_hist = Mat::zeros(nbin_x,nbin_y,CV_32FC1);
+    calcHist(&lbp, 1, channles, Mat(), lbp_hist, 1, &nbin_x, &ranges);
+    MatND norn_hist;
+    normalize(lbp_hist, lbp_hist, 0, 1, NORM_MINMAX,-1,Mat());
 
+    cout<<"=============exit lbp_features============="<<endl;
 }
+
+
 
 int main(int argc, char** argv){
     cout<<"test start"<<endl;
@@ -214,10 +255,109 @@ int main(int argc, char** argv){
     int neighbors = 8;
     get_lbp_feature(dst, radius, neighbors, lbp, lbp_hist);
 
+    cout<<"lpb_hist.cols: "<<lbp_hist.cols<<" | lbp_hist.rows: "<<lbp_hist.rows<<endl;
+    cout<<"lpb.cols: "<<lbp.cols<<" | lbp.rows: "<<lbp.rows<<endl;
+
     cout<<"LBP features of img: "<<endl;
     for(int i=0;i<3;i++){
         cout<<lbp.at<float>(i,0)<<" ";
     }
     cout<<endl;
+    // 文件输出lbp_hist
+    ofile.open("lbp_hist.txt",ios::out);
+    for(int i=1;i<lbp_hist.rows;i++){
+        ofile<<lbp_hist.at<float>(i,0)<<endl;
+    }
+    ofile.close();
+    // 文件输出lbp
+    ofile.open("lbp.txt",ios::out);
+    for(int i=0;i<lbp.rows;i++){
+        for(int j=0;j<lbp.cols;j++){
+            ofile<<lbp.at<float>(i,j)<<" ";
+        }
+        ofile<<endl;
+    }
+    ofile.close();
     return 0;
+}
+
+//等价模式LBP特征计算
+template <typename _tp>
+void getUniformPatternLBPFeature(InputArray _src, OutputArray _dst, int radius, int neighbors)
+{
+    Mat src = _src.getMat();
+    //LBP特征图像的行数和列数的计算要准确
+    _dst.create(src.rows - 2 * radius, src.cols - 2 * radius, CV_8UC1);
+    Mat dst = _dst.getMat();
+    dst.setTo(0);
+    //LBP特征值对应图像灰度编码表，直接默认采样点为8位
+    uchar temp = 1;
+    uchar table[256] = {0};
+    for (int i = 0; i < 256; i++)
+    {
+        if (getHopTimes(i) < 3)
+        {
+            table[i] = temp;
+            temp++;
+        }
+    }
+    //是否进行UniformPattern编码的标志
+    bool flag = false;
+    //计算LBP特征图
+    for (int k = 0; k < neighbors; k++)
+    {
+        if (k == neighbors - 1)
+        {
+            flag = true;
+        }
+        //计算采样点对于中心点坐标的偏移量rx，ry
+        float rx = static_cast<float>(radius * cos(2.0 * CV_PI * k / neighbors));
+        float ry = -static_cast<float>(radius * sin(2.0 * CV_PI * k / neighbors));
+        //为双线性插值做准备
+        //对采样点偏移量分别进行上下取整
+        int x1 = static_cast<int>(floor(rx));
+        int x2 = static_cast<int>(ceil(rx));
+        int y1 = static_cast<int>(floor(ry));
+        int y2 = static_cast<int>(ceil(ry));
+        //将坐标偏移量映射到0-1之间
+        float tx = rx - x1;
+        float ty = ry - y1;
+        //根据0-1之间的x，y的权重计算公式计算权重，权重与坐标具体位置无关，与坐标间的差值有关
+        float w1 = (1 - tx) * (1 - ty);
+        float w2 = tx * (1 - ty);
+        float w3 = (1 - tx) * ty;
+        float w4 = tx * ty;
+        //循环处理每个像素
+        for (int i = radius; i < src.rows - radius; i++)
+        {
+            for (int j = radius; j < src.cols - radius; j++)
+            {
+                //获得中心像素点的灰度值
+                _tp center = src.at<_tp>(i, j);
+                //根据双线性插值公式计算第k个采样点的灰度值
+                float neighbor = src.at<_tp>(i + x1, j + y1) * w1 + src.at<_tp>(i + x1, j + y2) * w2 + src.at<_tp>(i + x2, j + y1) * w3 + src.at<_tp>(i + x2, j + y2) * w4;
+                //LBP特征图像的每个邻居的LBP值累加，累加通过与操作完成，对应的LBP值通过移位取得
+                dst.at<uchar>(i - radius, j - radius) |= (neighbor > center) << (neighbors - k - 1);
+                //进行LBP特征的UniformPattern编码
+                if (flag)
+                {
+                    dst.at<uchar>(i - radius, j - radius) = table[dst.at<uchar>(i - radius, j - radius)];
+                }
+            }
+        }
+    }
+}
+//计算跳变次数
+int getHopTimes(int n)
+{
+    int count = 0;
+    bitset<8> binaryCode = n;
+    for (int i = 0; i < 8; i++)
+    {
+        if (binaryCode[i] != binaryCode[(i + 1) % 8])
+        {
+            count++;
+        }
+    }
+    return count;
 }

@@ -1,29 +1,42 @@
-【Apr 23rd】
-	= 已完成
-	- 完成OpenCV-Cpp环境部署
-	- 完成features.cpp/void get_context_feature()编写与初步调试运行
-		- 现void get_context_feature()已可以运行
-			- 习得技能：OpenCV图像切割
-			- 习得技能：OpenCV::calcHist()函数的参数设置
-				- Hue: 图像色调，当色调为0时颜色即为黑色，255时为白色；
-				- Saturation: 图像饱和度，当饱和度为0时，图像为灰度图；
-			- 习得技能：以MatND格式存储直方图，并通过.at<float>(h_idx, s_idx)进行
-				直方图各bin取值与赋值操作
-	- 完成anconda下OpenCV环境部署
-	= 待办项
-	- 直方图输出结果尚未与features.py中def get_context_feature()进行比对
-【Apr 24nd】
-	= 已完成
-	- 习得技能：OpenCV中需要InputArray与OutputArray对象的位置可直接使用Mat对象；
-【Apr 25nd】
-	= 习得技能：
-	- Python和C++中的OpenCV对裁剪图像用的ROI设定参数不同
-		- Python中，cropped_img = img(左上x, 左上y, 右下x, 右下y)
-		- C++中，Rect roi(左上x, 左上y, 宽, 高)
-	- 本以为用nonface_hist = face_hist初始化nonface_hist，但是face_hist会因此被改变，原因未知
-	  目前初始化采用：calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges)
-		- 【Apr 25nd 17:41】现已经改用nonface_hist = MatND::zeros(hbins,sbins,CV_32F)完成初始化
-	= 已完成
-		- void get_context_feature()测试完成；
-		- void get_lpb_feature()
-			- 编写完成获取LBP特征部分，但由于计算方法与skimge中不同，是否有效仍待验证  
+@Apr 23rd
+= 已完成
+- 完成OpenCV-Cpp环境部署
+- 完成features.cpp/void get_context_feature()编写与初步调试运行
+	- 现void get_context_feature()已可以运行
+		- 习得技能：OpenCV图像切割
+		- 习得技能：OpenCV::calcHist()函数的参数设置
+			- Hue: 图像色调，当色调为0时颜色即为黑色，255时为白色；
+			- Saturation: 图像饱和度，当饱和度为0时，图像为灰度图；
+		- 习得技能：以MatND格式存储直方图，并通过.at<float>(h_idx, s_idx)进行
+			直方图各bin取值与赋值操作
+- 完成anconda下OpenCV环境部署
+= 待办项
+- 直方图输出结果尚未与features.py中def get_context_feature()进行比对
+
+@Apr 24nd
+= 已完成
+- 习得技能：OpenCV中需要InputArray与OutputArray对象的位置可直接使用Mat对象；
+
+@Apr 25nd
+= 习得技能：
+- Python和C++中的OpenCV对裁剪图像用的ROI设定参数不同
+	- Python中，cropped_img = img(左上x, 左上y, 右下x, 右下y)
+	- C++中，Rect roi(左上x, 左上y, 宽, 高)
+- 本以为用nonface_hist = face_hist初始化nonface_hist，但是face_hist会因此被改变，原因未知
+	目前初始化采用：calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges)
+	- 【Apr 25nd 17:41】现已经改用nonface_hist = MatND::zeros(hbins,sbins,CV_32F)完成初始化
+= 已完成
+	- void get_context_feature()测试完成；
+	- void get_lbp_feature()
+		- 编写完成获取LBP特征部分，但由于计算方法与skimge中不同，是否有效仍待验证
+
+@Apr 28nd
+= 已完成
+- void get_lbp_feature()完成编写与调试运行
+	- 由于采用的Uniform LBP方法在计算上与Python源码中不同，故得到的直接结果有差异；
+	- 考虑到之后会重新使用LIBSVM重新训练模型，故现在无视数值上的直接差异，仅进行直方图转化（保持与Python
+	  源码相同的shape）
+	- 使用cv::normalize()函数对直方图进行归一化
+= 习得技能
+- cv::normalize()
+	- 注意其导出的MatND对象中，首位是归一化的总值；

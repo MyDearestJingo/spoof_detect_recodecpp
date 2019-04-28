@@ -13,6 +13,8 @@ opencv2/imgproc/imgproc.hpp
 /home/mdlu/spoof_detect_recodecpp/opencv2/imgproc/imgproc.hpp
 opencv2/opencv.hpp
 -
+math.h
+-
 iostream
 -
 fstream

@@ -40,8 +40,8 @@ def get_context_feature(img , crop_bbox):
 
 def get_lbp_feature(img,numPoints=8,radius=2):
     # img = cv2.equalizeHist(img)
-    binsNumber = numPoints*(numPoints-1)+3 # 直方图bin的数量
-    binsRange = np.arange(0,binsNumber+1) # 生成[0, binsNumber+1]的np.array，直方图x轴分隔点分布
+    binsNumber = numPoints*(numPoints-1)+3 # bin的上界
+    binsRange = np.arange(0,binsNumber+1) # 生成[0, binsNumber+1]的np.array，bin的数量
     lbp = feature.local_binary_pattern(img, numPoints, radius, method = 'nri_uniform') #
     (hist, bins) = np.histogram(lbp.ravel(), bins=binsRange, range=(0,binsNumber),) # ？bins无用
     hist = hist/sum(hist) # 归一化
