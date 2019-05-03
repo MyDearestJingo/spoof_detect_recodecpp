@@ -69,3 +69,29 @@
 		- 具体SVM的类型和超参的设置要研究下Python源码的设置
 	- 在项目文件源码中只加入模型的预测功能
 		- 调用LIBSVM关于模型载入与预测的接口
+@May 3rd 20:25
+= 已完成
+- 使用Python完成对.cpp数据集的预处理
+	- 源代码存放与./preprocess目录下
+= 习得技能
+- MTCNN可能在一张图片中检测出多张人脸，故mtcnn.detect_face()的返回值中，bboxs的0-dim表示检测到的人脸数
+	- 对应的，crop_imges()也同样如此
+- 使用CUDA_VISIBLE_DEVICES=x命令可在运行时指定GPU
+	- EXAMPLE: CUDA_VISIBLE_DEVICES=4 python data_prepro.py 
+- 使用cmd命令与服务器传输文件/目录
+	- 从服务器下载目录：scp -r username@servername:<remote_dir> <local_dir>
+	- 向服务器上传目录：scp -r <local_dir> username@servername:<remote_dir>
+	- 从服务器下载文件：scp username@servername:<remote_file_path> <local_dir>
+	- 从服务器下载文件：scp <local_file_path> username@servername:<remote_dir>
+= 文件预处理结果说明
+- 预处理后图片命名
+	- x_<OrgFilename>.jpg
+	- x为OrgFilename中检测到的第几张人脸
+- bboxs_list.txt
+	- 经过MTCNN模型进行人脸检测后得到的原图中人脸的位置坐标（左上角与右下角）
+	- 各字段含义：
+		- <org_file_name> <检测到人脸数> <人脸坐标_0：包括5个float> <人脸坐标_1：包括5个float> ...
+- cropped_bboxs_list.txt
+	- crop_images()函数对传入的人脸的位置进行放大后得到的选框对于原图的位置坐标（左上角与右下角）
+	- 各字段含义：
+		- <org_file_name> <检测到人脸数> <选框坐标_0: 包括4个int> <选框坐标_0: 包括4个int> ...
