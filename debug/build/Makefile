@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named calcHist_test_exe
+# Target rules for targets named test_features_exe
 
 # Build rule for target.
-calcHist_test_exe: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 calcHist_test_exe
-.PHONY : calcHist_test_exe
+test_features_exe: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_features_exe
+.PHONY : test_features_exe
 
 # fast build rule for target.
-calcHist_test_exe/fast:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/build
-.PHONY : calcHist_test_exe/fast
+test_features_exe/fast:
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/build
+.PHONY : test_features_exe/fast
 
 features.o: features.cpp.o
 
@@ -129,7 +129,7 @@ features.o: features.cpp.o
 
 # target to build an object file
 features.cpp.o:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/features.cpp.o
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.o
 .PHONY : features.cpp.o
 
 features.i: features.cpp.i
@@ -138,7 +138,7 @@ features.i: features.cpp.i
 
 # target to preprocess a source file
 features.cpp.i:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/features.cpp.i
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.i
 .PHONY : features.cpp.i
 
 features.s: features.cpp.s
@@ -147,7 +147,7 @@ features.s: features.cpp.s
 
 # target to generate assembly for a file
 features.cpp.s:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/features.cpp.s
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.s
 .PHONY : features.cpp.s
 
 test_features.o: test_features.cpp.o
@@ -156,7 +156,7 @@ test_features.o: test_features.cpp.o
 
 # target to build an object file
 test_features.cpp.o:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/test_features.cpp.o
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.o
 .PHONY : test_features.cpp.o
 
 test_features.i: test_features.cpp.i
@@ -165,7 +165,7 @@ test_features.i: test_features.cpp.i
 
 # target to preprocess a source file
 test_features.cpp.i:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/test_features.cpp.i
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.i
 .PHONY : test_features.cpp.i
 
 test_features.s: test_features.cpp.s
@@ -174,7 +174,7 @@ test_features.s: test_features.cpp.s
 
 # target to generate assembly for a file
 test_features.cpp.s:
-	$(MAKE) -f CMakeFiles/calcHist_test_exe.dir/build.make CMakeFiles/calcHist_test_exe.dir/test_features.cpp.s
+	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.s
 .PHONY : test_features.cpp.s
 
 # Help Target
@@ -184,7 +184,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... calcHist_test_exe"
+	@echo "... test_features_exe"
 	@echo "... edit_cache"
 	@echo "... features.o"
 	@echo "... features.i"

@@ -81,8 +81,7 @@ int getHopTimes(int n){
     return count;
 }
 void get_context_feature(const Mat& img, const int* crop_bbox, MatND& face_hist, MatND& nonface_hist){
-    cout<<"=============enter context_features============="<<endl;
-
+    // cout<<"=============enter context_features============="<<endl;   
     // 使用opencv绘制图像直方图
     // 直方图属性：
     // hbins: 色调等级,色调为0则为黑色，此处设置为256个级别; 
@@ -100,25 +99,24 @@ void get_context_feature(const Mat& img, const int* crop_bbox, MatND& face_hist,
     // uniform：默认为true，是否需要改为false
     // 计算全局直方图
     MatND img_hist;
-    cout<<"clac img_hist ..."<<endl;
+    // cout<<"clac img_hist ..."<<endl;
     calcHist(&img, 1, channles, Mat(), img_hist, 1, histSize, ranges);
     // 根据crop_bbox坐标裁剪图像
-    Rect roi(crop_bbox[0],crop_bbox[1],crop_bbox[2],crop_bbox[3]);
+    // roi(xL,yL,w,h)
+    Rect roi(crop_bbox[0],crop_bbox[1],crop_bbox[2]-crop_bbox[0],crop_bbox[3]-crop_bbox[1]);
     Mat face = img(roi);
 
-    cout<<"("<<face.rows<<","<<face.cols<<")"<<endl;
+    // cout<<"("<<face.rows<<","<<face.cols<<")"<<endl;
     // imshow(" ",face);
     // waitKey(0);
-    // 输出face像素值
-    int x = 50;
-    int y = 50;
-    cout<<"face "<<x<<","<<y<<" :"<<face.at<float>(x,y)<<endl;
+
     // 计算人脸区域直方图
-    cout<<"clac face_hist ..."<<endl;
+    // cout<<"clac face_hist ..."<<endl;
     calcHist(&face, 1, channles, Mat(), face_hist, 1, histSize, ranges);
     // calcHist(&face, 1, channles, Mat(), nonface_hist, 1, histSize, ranges);
     
-    // 预输出face_hist未归一化版本
+    #ifdef DEBUG
+        // 预输出face_hist未归一化版本
     for(int i=40;i<50;i++){
         // cout<<i<<" : "<<face_hist.at<float>(i,0)<<endl;
     }
@@ -126,6 +124,7 @@ void get_context_feature(const Mat& img, const int* crop_bbox, MatND& face_hist,
     for(int i=0;i<hranges[1];i++){
         // cout<<i+1<<" : "<<img_hist.at<float>(i,0)<<endl;
     }
+    #endif // DEBUG
 
     // 初始化nonface_hist
     nonface_hist = MatND::zeros(hbins,sbins,CV_32F);
@@ -137,38 +136,31 @@ void get_context_feature(const Mat& img, const int* crop_bbox, MatND& face_hist,
         //     nonface_hist[i] = img_hist[i] - face_hist[i];
         //     sum += face_hist[i];
         // }
-    cout<<"clac nonface_hist ..."<<endl;
+    // cout<<"clac nonface_hist ..."<<endl;
     for( int h = 0; h < hbins; h++ ){
         for( int s = 0; s < sbins; s++ ){   
-            // cout<<"h = "<<h<<" | s = "<<s<<endl;
-            // float binVal = hist.at<float>(h, s);
-            // int intensity = cvRound(binVal*255/maxVal);
-            // rectangle( histImg, Point(h*scale, s*scale),
-            //             Point( (h+1)*scale - 1, (s+1)*scale - 1),
-            //             Scalar::all(intensity),
-            //             CV_FILLED );
-            // cout<<"img_hist: "<<img_hist.at<float>(h,s)<<" | "
-                // <<"face_hist: "<<face_hist.at<float>(h,s)<<endl;;
             nonface_hist.at<float>(h,s) = img_hist.at<float>(h,s) - face_hist.at<float>(h,s);
             sum += face_hist.at<float>(h,s);
         }
     }
 
-    cout<<"nonface_hist "<<56<<" : "<<nonface_hist.at<float>(56,0)<<endl;
+    // cout<<"nonface_hist "<<56<<" : "<<nonface_hist.at<float>(56,0)<<endl;
 
-    // 归一化
+    #ifdef DEBUG
+        // 归一化
     cout<<"Normalize ..."<<endl;
     cout<<"sum = "<<sum<<endl;
+    #endif // DEBUG
+
     for( int h = 0; h < hbins; h++ ){
         for( int s = 0; s < sbins; s++ ){
             face_hist.at<float>(h,s) /= sum;
         }
     }
-    cout<<"=============exit context_features============="<<endl;
     return;
 }
 void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatND &lbp, MatND &lbp_hist){
-    cout<<"=============enter lbp_features============="<<endl;
+    // cout<<"=============enter lbp_features============="<<endl;
     int binsNumber = neighbors*(neighbors-1)+3;
     int binsRange[] = {0,binsNumber+1};
     // 初始化MatND lbp
@@ -249,7 +241,7 @@ void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatN
             if(max<tmp) max = tmp;
         }
     }
-    cout<<"Max: "<<max<<endl;
+    // cout<<"Max: "<<max<<endl;
     // int nbin_x = pow(2,neighbors)-1;
     int nbin_x = neighbors*(neighbors-1)+4;
     int nbin_y = 1; 
@@ -261,34 +253,23 @@ void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatN
     // float axis_y[] = { 0, 1 };
     const float* ranges = { axis_z };
     // MatND lbp_hist;
-    cout<<"nbin_x: "<<nbin_x<<" ,nbin_y: "<<nbin_y<<endl;
+    // cout<<"nbin_x: "<<nbin_x<<" ,nbin_y: "<<nbin_y<<endl;
     lbp_hist = Mat::zeros(nbin_x,nbin_y,CV_32FC1);
     calcHist(&lbp, 1, channles, Mat(), lbp_hist, 1, &nbin_x, &ranges);
     MatND norn_hist;
     normalize(lbp_hist, lbp_hist, 0, 1, NORM_MINMAX,-1,Mat());
 
-    cout<<"=============exit lbp_features============="<<endl;
+    // cout<<"=============exit lbp_features============="<<endl;
 }
 
-bool spoof_detect(string img_path){
-    cout<<"test start"<<endl;
-    Mat src, dst;
-    src = imread(img_path);
-    if(!src.data){
-        cout<<"Error: Img read failed!"<<endl;
-        return -1;
-    }
-    // imshow("original",src);
+bool spoof_detect(Mat &img, int *cropped_bbox){
 
-    // float face_hist[256] = {0.0};
-    // float nonface_hist[256] = {0.0};
-    cvtColor(src, dst, COLOR_BGR2GRAY);
     // imshow("gray",dst);
     // waitKey(0);
     MatND face_hist, nonface_hist;
-    int crop_bboxs[4] = {10,10,90,90}; // 根据ROI设置，按顺序分别为{起始点x坐标，起始点y坐标，x方向延伸距离，y方向延伸距离}
-    get_context_feature(dst, crop_bboxs, face_hist, nonface_hist);
+    get_context_feature(img, cropped_bbox, face_hist, nonface_hist);
     
+    #ifdef DEBUG
     // 点测正则化后的face_hist
     cout<<"Normalized_face_hist "<<140<<" : "<<face_hist.at<float>(140,0)<<endl;
     
@@ -299,14 +280,14 @@ bool spoof_detect(string img_path){
         ofile<<face_hist.at<float>(i,0)<<endl;
     }
     ofile.close();
+    #endif // DEBUG
 
     // 提取LBP特征
-    MatND lbp;
+    MatND lbp; // 无用，日后可以删掉省点内存
     MatND lbp_hist;
-    int radius = 2;
-    int neighbors = 8;
-    get_lbp_feature(dst, radius, neighbors, lbp, lbp_hist);
+    get_lbp_feature(img, RADIUIS, NEIGHBORS, lbp, lbp_hist);
 
+    #ifdef DEBUG
     cout<<"lpb_hist.cols: "<<lbp_hist.cols<<" | lbp_hist.rows: "<<lbp_hist.rows<<endl;
     cout<<"lpb.cols: "<<lbp.cols<<" | lbp.rows: "<<lbp.rows<<endl;
 
@@ -330,5 +311,6 @@ bool spoof_detect(string img_path){
         ofile<<endl;
     }
     ofile.close();
+    #endif // DEBUG
     return true;
 }

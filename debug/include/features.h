@@ -6,6 +6,10 @@
 #include <string>
 #include <bitset>
 
+// #define DEBUG
+#define RADIUIS 2
+#define NEIGHBORS 8
+
 using namespace cv;
 using namespace std;
 
@@ -16,4 +20,4 @@ void getUniformPatternLBPFeature(InputArray _src, OutputArray _dst, int radius, 
 int getHopTimes(int n);
 void get_lbp_feature(const Mat& src, const int radius, const int neighbors, MatND &lbp, MatND &lbp_hist);
 
-bool spoof_detect(string img_path);
+bool spoof_detect(Mat &img, int *cropped_bbox);

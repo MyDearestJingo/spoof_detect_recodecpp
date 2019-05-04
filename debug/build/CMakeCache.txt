@@ -130,7 +130,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=calcHist_test
+CMAKE_PROJECT_NAME:STATIC=test_features
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -185,10 +185,22 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
 
 //Value Computed by CMake
-calcHist_test_BINARY_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug/build
+debug_BINARY_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug/build
 
 //Value Computed by CMake
-calcHist_test_SOURCE_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug
+debug_SOURCE_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug
+
+//Value Computed by CMake
+test_features_BINARY_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug/build
+
+//Value Computed by CMake
+test_features_SOURCE_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug
+
+//Value Computed by CMake
+test_svm_tools_BINARY_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug/build
+
+//Value Computed by CMake
+test_svm_tools_SOURCE_DIR:STATIC=/home/mdlu/spoof_detect_recodecpp/debug
 
 
 ########################

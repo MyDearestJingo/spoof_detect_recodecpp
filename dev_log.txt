@@ -95,3 +95,14 @@
 	- crop_images()函数对传入的人脸的位置进行放大后得到的选框对于原图的位置坐标（左上角与右下角）
 	- 各字段含义：
 		- <org_file_name> <检测到人脸数> <选框坐标_0: 包括4个int> <选框坐标_0: 包括4个int> ...
+
+@May 4nd 13:34
+= 今日第一坑
+- 使用git获取remote上一本地尚未存在的分之时，先使用命令：
+	- git checkout -b <local_new_branch_name> <remote_name>/<remote_branch_name>
+	- 也就是现在本地新建一个分支，再从remote获取想要的分之进行覆盖
+= 已完成
+- svm_tools.cpp/void read_data()完成调试运行
+= 优化点
+- 特征提取时的MatND face_hist, nonface_hist, lbp_hist日后可以不分开，也就是弄一个长度为256+256+59的向量
+	来保存，这样就可以省去之后的合并操作
