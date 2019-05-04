@@ -114,3 +114,8 @@
 		已更正
 - 完成svm_tools.cpp/preproc_data()的编写与调试运行
 	- 功能概述：将read_data()中读入的struct data转为float的特征向量
+@May 5th 1:29
+= 已完成
+- 把crop_images()的坑都踩完了，bug也改完了，现在生成的cropped_bboxs.txt里的数据是正确的
+- 完成svm_tools.cpp和test_svm_tools.cpp关于LIBSVM训练用数据的预处理，保存于数据集目录下的各个FD_OUT.txt文件中
+	- 数据集格式为：<Class_Flag> <1:256_Face_hist> <257:512_Nonface_hist> <513:_LBP_hist>

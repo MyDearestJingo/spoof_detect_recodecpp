@@ -6,7 +6,7 @@
 #include <string>
 #include <bitset>
 
-#define DEBUG
+// #define DEBUG
 #define RADIUIS 2
 #define NEIGHBORS 8
 

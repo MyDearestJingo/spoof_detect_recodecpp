@@ -31,10 +31,10 @@ in_path = "org_data/"
 out_path = "preproc_data/"
 
 data_path_list = [
-    # "re_train_neg_align/test_part/",
-    # "re_train_neg_align/train_part/",
-    "re_train_pos_align/test_part/"
-    # "re_train_pos_align/train_part/"
+    "re_train_neg_align/test_part/",
+    "re_train_neg_align/train_part/",
+    "re_train_pos_align/test_part/",
+    "re_train_pos_align/train_part/"
 ]
 
 def crop_images(img, bboxs): # 【MD】bboxs:人脸区域
@@ -57,8 +57,10 @@ def crop_images(img, bboxs): # 【MD】bboxs:人脸区域
         cropped_img = img[int(l_y):int(r_y), int(l_x):int(r_x)]
         c_h, c_w = cropped_img.shape[:2]
         cropped.append(cropped_img)
-        croped_bboxs.append(int(cb_0))
-        croped_bboxs.append(int(cb_1))
+        cb_0 = int(max(cb_0,0))
+        cb_1 = int(max(cb_1,0))
+        croped_bboxs.append(cb_0)
+        croped_bboxs.append(cb_1)
         croped_bboxs.append(int(min(c_w-cb_0,b_w)))
         croped_bboxs.append(int(min(c_h-cb_1,b_h)))
     return cropped , croped_bboxs
@@ -77,7 +79,7 @@ if __name__ == '__main__':
         
         for i in range(num_imgs):
             img_name = img_name_list[i]
-            print(">>> Processing: "+str(i)+" of "+str(num_imgs)+" "+data_path+img_name, end='\r')
+            print(">>> Processing: "+str(i)+" of "+str(num_imgs)+" "+data_path+img_name,end='\r')
             img = cv2.imread(in_path+data_path+img_name)
             img_list.append(img)
             bbox, _ = mtcnn_detector.detect_face(img)
