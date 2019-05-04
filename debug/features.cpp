@@ -103,7 +103,10 @@ void get_context_feature(const Mat& img, const int* crop_bbox, MatND& face_hist,
     calcHist(&img, 1, channles, Mat(), img_hist, 1, histSize, ranges);
     // 根据crop_bbox坐标裁剪图像
     // roi(xL,yL,w,h)
-    Rect roi(crop_bbox[0],crop_bbox[1],crop_bbox[2]-crop_bbox[0],crop_bbox[3]-crop_bbox[1]);
+    #ifdef DEBUG
+    cout<<">>> crop bbox: "<<crop_bbox[0]<<","<<crop_bbox[1]<<","<<crop_bbox[2]<<","<<crop_bbox[3]<<endl;
+    #endif // DEBUG
+    Rect roi(crop_bbox[0],crop_bbox[1],crop_bbox[2],crop_bbox[3]);
     Mat face = img(roi);
 
     // cout<<"("<<face.rows<<","<<face.cols<<")"<<endl;

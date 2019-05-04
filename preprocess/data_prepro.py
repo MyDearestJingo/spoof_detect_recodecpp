@@ -31,10 +31,10 @@ in_path = "org_data/"
 out_path = "preproc_data/"
 
 data_path_list = [
-    "re_train_neg_align/test_part/",
-    "re_train_neg_align/train_part/",
-    "re_train_pos_align/test_part/",
-    "re_train_pos_align/train_part/"
+    # "re_train_neg_align/test_part/",
+    # "re_train_neg_align/train_part/",
+    "re_train_pos_align/test_part/"
+    # "re_train_pos_align/train_part/"
 ]
 
 def crop_images(img, bboxs): # 【MD】bboxs:人脸区域
@@ -50,19 +50,21 @@ def crop_images(img, bboxs): # 【MD】bboxs:人脸区域
         r_x = min(bboxs[i, 2] + 0.4 * b_w, w)
         # r_y = min(bboxs[i, 3] + 0.4 * b_h, h)
         r_y = bboxs[i, 3]
-        cb_0 = (0.4 * b_w) if bboxs[i, 0] > (0.4 * b_w)  else bboxs[i, 0]
-        cb_1 = (0.4 * b_h) if bboxs[i, 1] > (0.4 * b_h)  else bboxs[i, 1]
-        cb_2 = (1.4 * b_w) if bboxs[i, 0] > (0.4 * b_w)  else bboxs[i, 0] + b_w
-        cb_3 = cb_2 + b_h
-        cropped.append(img[int(l_y):int(r_y), int(l_x):int(r_x)])
+        cb_0 = (0.4 * b_w) if bboxs[i, 0] > (0.4 * b_w)  else bboxs[i, 0]           #xL
+        cb_1 = (0.4 * b_h) if bboxs[i, 1] > (0.4 * b_h)  else bboxs[i, 1]           #yL
+        cb_2 = (1.4 * b_w) if bboxs[i, 0] > (0.4 * b_w)  else bboxs[i, 0] + b_w     #xR
+        cb_3 = cb_2 + b_h                                                           #yR
+        cropped_img = img[int(l_y):int(r_y), int(l_x):int(r_x)]
+        c_h, c_w = cropped_img.shape[:2]
+        cropped.append(cropped_img)
         croped_bboxs.append(int(cb_0))
         croped_bboxs.append(int(cb_1))
-        croped_bboxs.append(int(cb_2))
-        croped_bboxs.append(int(cb_3))
+        croped_bboxs.append(int(min(c_w-cb_0,b_w)))
+        croped_bboxs.append(int(min(c_h-cb_1,b_h)))
     return cropped , croped_bboxs
 
 if __name__ == '__main__':
-    mtcnn_detector = MtcnnDetector(min_face_size=24, use_cuda=True)
+    mtcnn_detector = MtcnnDetector(min_face_size=24, use_cuda=False)
     for i_path in range(len(data_path_list)):
         data_path = data_path_list[i_path]
         img_name_list = os.listdir(in_path+data_path)
@@ -71,7 +73,7 @@ if __name__ == '__main__':
         cropped_bboxs_list = list()
         img_list = list()
         bboxs_list = list()
-        print("Now at Part "+str(i_path)+" of "+str(len(data_path_list))+" "+ data_path + " | number of imgs: "+str(num_imgs))
+        print("Now at Part "+str(i_path+1)+" of "+str(len(data_path_list))+" "+ data_path + " | number of imgs: "+str(num_imgs))
         
         for i in range(num_imgs):
             img_name = img_name_list[i]

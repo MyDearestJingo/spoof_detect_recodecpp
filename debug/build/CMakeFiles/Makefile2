@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/mdlu/spoof_detect_recodecpp/debug
 CMAKE_BINARY_DIR = /home/mdlu/spoof_detect_recodecpp/debug/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/test_features_exe.dir
+# Target rules for target CMakeFiles/test_svm_tools_exe.dir
 
 # All Build rule for target.
-CMakeFiles/test_features_exe.dir/all:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/depend
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles --progress-num=1,2,3 "Built target test_features_exe"
-.PHONY : CMakeFiles/test_features_exe.dir/all
+CMakeFiles/test_svm_tools_exe.dir/all:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/depend
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles --progress-num=1,2,3,4 "Built target test_svm_tools_exe"
+.PHONY : CMakeFiles/test_svm_tools_exe.dir/all
 
 # Include target in all.
-all: CMakeFiles/test_features_exe.dir/all
+all: CMakeFiles/test_svm_tools_exe.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/test_features_exe.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test_features_exe.dir/all
+CMakeFiles/test_svm_tools_exe.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test_svm_tools_exe.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mdlu/spoof_detect_recodecpp/debug/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_features_exe.dir/rule
+.PHONY : CMakeFiles/test_svm_tools_exe.dir/rule
 
 # Convenience name for target.
-test_features_exe: CMakeFiles/test_features_exe.dir/rule
+test_svm_tools_exe: CMakeFiles/test_svm_tools_exe.dir/rule
 
-.PHONY : test_features_exe
-
-# clean rule for target.
-CMakeFiles/test_features_exe.dir/clean:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/clean
-.PHONY : CMakeFiles/test_features_exe.dir/clean
+.PHONY : test_svm_tools_exe
 
 # clean rule for target.
-clean: CMakeFiles/test_features_exe.dir/clean
+CMakeFiles/test_svm_tools_exe.dir/clean:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/clean
+.PHONY : CMakeFiles/test_svm_tools_exe.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/test_svm_tools_exe.dir/clean
 
 .PHONY : clean
 

@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named test_features_exe
+# Target rules for targets named test_svm_tools_exe
 
 # Build rule for target.
-test_features_exe: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_features_exe
-.PHONY : test_features_exe
+test_svm_tools_exe: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_svm_tools_exe
+.PHONY : test_svm_tools_exe
 
 # fast build rule for target.
-test_features_exe/fast:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/build
-.PHONY : test_features_exe/fast
+test_svm_tools_exe/fast:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/build
+.PHONY : test_svm_tools_exe/fast
 
 features.o: features.cpp.o
 
@@ -129,7 +129,7 @@ features.o: features.cpp.o
 
 # target to build an object file
 features.cpp.o:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.o
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/features.cpp.o
 .PHONY : features.cpp.o
 
 features.i: features.cpp.i
@@ -138,7 +138,7 @@ features.i: features.cpp.i
 
 # target to preprocess a source file
 features.cpp.i:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.i
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/features.cpp.i
 .PHONY : features.cpp.i
 
 features.s: features.cpp.s
@@ -147,35 +147,62 @@ features.s: features.cpp.s
 
 # target to generate assembly for a file
 features.cpp.s:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/features.cpp.s
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/features.cpp.s
 .PHONY : features.cpp.s
 
-test_features.o: test_features.cpp.o
+svm_tools.o: svm_tools.cpp.o
 
-.PHONY : test_features.o
+.PHONY : svm_tools.o
 
 # target to build an object file
-test_features.cpp.o:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.o
-.PHONY : test_features.cpp.o
+svm_tools.cpp.o:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/svm_tools.cpp.o
+.PHONY : svm_tools.cpp.o
 
-test_features.i: test_features.cpp.i
+svm_tools.i: svm_tools.cpp.i
 
-.PHONY : test_features.i
+.PHONY : svm_tools.i
 
 # target to preprocess a source file
-test_features.cpp.i:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.i
-.PHONY : test_features.cpp.i
+svm_tools.cpp.i:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/svm_tools.cpp.i
+.PHONY : svm_tools.cpp.i
 
-test_features.s: test_features.cpp.s
+svm_tools.s: svm_tools.cpp.s
 
-.PHONY : test_features.s
+.PHONY : svm_tools.s
 
 # target to generate assembly for a file
-test_features.cpp.s:
-	$(MAKE) -f CMakeFiles/test_features_exe.dir/build.make CMakeFiles/test_features_exe.dir/test_features.cpp.s
-.PHONY : test_features.cpp.s
+svm_tools.cpp.s:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/svm_tools.cpp.s
+.PHONY : svm_tools.cpp.s
+
+test_svm_tools.o: test_svm_tools.cpp.o
+
+.PHONY : test_svm_tools.o
+
+# target to build an object file
+test_svm_tools.cpp.o:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/test_svm_tools.cpp.o
+.PHONY : test_svm_tools.cpp.o
+
+test_svm_tools.i: test_svm_tools.cpp.i
+
+.PHONY : test_svm_tools.i
+
+# target to preprocess a source file
+test_svm_tools.cpp.i:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/test_svm_tools.cpp.i
+.PHONY : test_svm_tools.cpp.i
+
+test_svm_tools.s: test_svm_tools.cpp.s
+
+.PHONY : test_svm_tools.s
+
+# target to generate assembly for a file
+test_svm_tools.cpp.s:
+	$(MAKE) -f CMakeFiles/test_svm_tools_exe.dir/build.make CMakeFiles/test_svm_tools_exe.dir/test_svm_tools.cpp.s
+.PHONY : test_svm_tools.cpp.s
 
 # Help Target
 help:
@@ -184,14 +211,17 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... test_features_exe"
+	@echo "... test_svm_tools_exe"
 	@echo "... edit_cache"
 	@echo "... features.o"
 	@echo "... features.i"
 	@echo "... features.s"
-	@echo "... test_features.o"
-	@echo "... test_features.i"
-	@echo "... test_features.s"
+	@echo "... svm_tools.o"
+	@echo "... svm_tools.i"
+	@echo "... svm_tools.s"
+	@echo "... test_svm_tools.o"
+	@echo "... test_svm_tools.i"
+	@echo "... test_svm_tools.s"
 .PHONY : help
 
 

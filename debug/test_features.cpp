@@ -2,7 +2,7 @@
 
 
 int main(int argc, char** argv){
-    string img_path = "/home/mdlu/spoof_detect_recodecpp/debug/preproc_data/re_train_neg_align/test_part/0_1554866134.6505647.jpg";
+    string img_path = "/home/mdlu/spoof_detect_recodecpp/preprocess/preproc_data/re_train_pos_align/test_part/0_1554818939.8856304.jpg";
     cout<<"test start"<<endl;
     Mat src, dst;
     src = imread(img_path);
@@ -17,8 +17,8 @@ int main(int argc, char** argv){
     cvtColor(src, dst, COLOR_BGR2GRAY);
     imshow("gray", dst);
     waitKey(0);
-    // cropped_bbox[4] = {xL,yL,xR,yR}
-    int cropped_bbox[4] = {36, 42, 126,233}; 
+    // cropped_bbox[4] = {xL,yL,w,h};
+    int cropped_bbox[4] = {51, 60, 129, 152 }; 
     if(spoof_detect(dst, cropped_bbox)) cout<<"Complete"<<endl;
     return 0;
 }

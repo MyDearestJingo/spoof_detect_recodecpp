@@ -106,3 +106,11 @@
 = 优化点
 - 特征提取时的MatND face_hist, nonface_hist, lbp_hist日后可以不分开，也就是弄一个长度为256+256+59的向量
 	来保存，这样就可以省去之后的合并操作
+@May 4nd 16:46
+= 已完成
+- 对data_preproc.py中的代码进行了更改
+	- 现在输出的cropped_bbox格式为{xL,yL,w,h}
+	- 由于原有crop_images()代码中构建crop_bbox的方法存在bug，导致输出的cropped_bbox范围大于裁剪后的图片，现
+		已更正
+- 完成svm_tools.cpp/preproc_data()的编写与调试运行
+	- 功能概述：将read_data()中读入的struct data转为float的特征向量

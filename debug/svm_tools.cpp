@@ -36,12 +36,13 @@ using namespace std;
 void read_data(ifstream &FILE, string dir, vector<data> &v_data){
     int count = 0;
     while(!FILE.eof()){
-        #ifdef DEBUG
-        count++;
-        cout<<"Reading No."<<count<<endl;
-        #endif
+
         string org_filename;
         FILE>>org_filename;
+        #ifdef DEBUG
+        count++;
+        cout<<"Reading No."<<count<<" Filename: "<<org_filename<<'\r';
+        #endif
         int num_face = 0;
         FILE>>num_face;
         for(int i=0;i<num_face;i++){
@@ -49,17 +50,18 @@ void read_data(ifstream &FILE, string dir, vector<data> &v_data){
             string path = dir + to_string(i) + "_" + org_filename;
             Mat src = imread(path);
             cvtColor(src, new_data.cropped_img, COLOR_BGR2GRAY);
-            for(int j=0;j<2;j++){
+            for(int j=0;j<4;j++){
                 FILE>>new_data.cropped_bbox[j];
             }
-            int right_down_x, right_down_y;
-            FILE>>right_down_x;
-            FILE>>right_down_y;
-            new_data.cropped_bbox[2] = right_down_x - cropped_bbox[0];
-            new_data.cropped_bbox[3] = right_down_y - cropped_bbox[1];
+            // int right_down_x, right_down_y;
+            // FILE>>right_down_x;
+            // FILE>>right_down_y;
+            // new_data.cropped_bbox[2] = right_down_x - cropped_bbox[0];
+            // new_data.cropped_bbox[3] = right_down_y - cropped_bbox[1];
             v_data.push_back(new_data);
         }
     }
+    cout<<endl;
 }
 /*
     Args:
@@ -73,15 +75,9 @@ void preproc_data(vector<data> &v_data,const int n_samples, float fd[][256*2+59]
         cout<<"preproc_data No."<<i<<endl;
         #endif // DEBUG
         MatND face_hist, nonface_hist;
-        #ifdef DEBUG
-        cout<<"Enter context feature"<<endl;
-        #endif // DEBUG
         get_context_feature(v_data[i].cropped_img, v_data[i].cropped_bbox, face_hist, nonface_hist);
         MatND lbp; // 无用，日后可以删掉省点内存
         MatND lbp_hist;
-        #ifdef DEBUG
-        cout<<"Enter lbp feature"<<endl;
-        #endif // DEBUG
         get_lbp_feature(v_data[i].cropped_img, RADIUIS, NEIGHBORS, lbp, lbp_hist);
         for(int j=0;j<256;j++){ // 256 is the length of face_hist and nonface_hist
             fd[i][j] = face_hist.at<float>(j,0);
@@ -91,5 +87,5 @@ void preproc_data(vector<data> &v_data,const int n_samples, float fd[][256*2+59]
             fd[i][j+256*2] = lbp_hist.at<float>(j,0);
         }
     }
-
+    cout<<endl;
 }

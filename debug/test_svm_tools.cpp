@@ -4,7 +4,7 @@
 int main(){
     vector<data> v_data;
     string dir = 
-        "/home/mdlu/spoof_detect_recodecpp/debug/preproc_data/re_train_neg_align/test_part/";
+        "/home/mdlu/spoof_detect_recodecpp/preprocess/preproc_data/re_train_pos_align/test_part/";
     string cropped_bboxs_filename = "cropped_bboxs_list.txt";
     ifstream FILE;
     FILE.open(dir+cropped_bboxs_filename);
@@ -21,8 +21,8 @@ int main(){
     }
     #endif
 
-    float fd[10][256*2+59];
-    preproc_data(v_data, 10, fd);
+    float fd[550][256*2+59];
+    preproc_data(v_data, v_data.size(), fd);
 
     return 0;
 }
